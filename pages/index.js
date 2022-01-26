@@ -1,34 +1,7 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import appConfig from '../config.json';
-
-function GlobalStyle() {
-  return (
-    <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: 'Open Sans', sans-serif;
-      }
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-  );
-}
 
 function Titulo(props) {
   const Tag = props.tag || 'h1';
@@ -60,11 +33,15 @@ function Titulo(props) {
 // export default HomePage
 
 export default function PaginaInicial() {
-  const username = 'luizlopes12';
-
+  const [username, setUsername] = useState();
+  // const [aviso, setAviso] = useState(false)
+  const router = useRouter();
+  const handleChanger = (event) =>{
+    setUsername(event.target.value)
+    
+  }
   return (
     <>
-      <GlobalStyle />
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -91,6 +68,10 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
+            onSubmit={()=>{
+              event.preventDefault()
+              router.push('/chat')
+            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -102,6 +83,13 @@ export default function PaginaInicial() {
             </Text>
 
             <TextField
+              onChange={()=>{
+                event.target.value.length > 2 ?
+                handleChanger(event)
+                :
+                setAviso(true)
+              }}
+              placeholder='Digite seu usuario github'
               fullWidth
               textFieldColors={{
                 neutral: {
@@ -112,6 +100,12 @@ export default function PaginaInicial() {
                 },
               }}
             />
+            {/* <div style={{
+              display: 'flex',
+              fontSize: '14px',
+              marginBottom: '10px',
+              color: 'red'
+            }}>{aviso && 'O usuario deve ter ao menos 2 caracteres'}</div> */}
             <Button
               type='submit'
               label='Entrar'
